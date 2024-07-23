@@ -67,7 +67,7 @@ const Calculator: React.FC = () => {
 				placeholder="Montante"
 			/>
 			<Select
-				defaultValue="Selecione uma moéda"
+				defaultValue="Selecione uma moeda"
 				label="De"
 				options={currencyOptions}
 				value={fromCurrency}
