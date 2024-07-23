@@ -1,14 +1,12 @@
-import { useState, useContext } from "react";
-import { ExchangeContext } from "../context/ExchangeContext";
+import { useState } from "react";
 
-const useCurrencyConverter = () => {
-  const exchangeContext = useContext(ExchangeContext);
+interface UseCurrencyConverterProps {
+  convert: (amount: string, fromCurrency: string, toCurrency: string) => Promise<number | null>;
+  coins: { [key: string]: string };
+  combinations: { [key: string]: string };
+}
 
-  if (!exchangeContext)
-    throw new Error("ExchangeContext must be used within an ExchangeProvider");
-
-  const { convert } = exchangeContext;
-
+const useCurrencyConverter = ({ convert, coins, combinations }: UseCurrencyConverterProps) => {
   const [amount, setAmount] = useState<string>("");
   const [fromCurrency, setFromCurrency] = useState<string>("");
   const [toCurrency, setToCurrency] = useState<string>("");
