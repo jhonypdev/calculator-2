@@ -1,6 +1,4 @@
-/** @format */
-
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { ExchangeContext } from "../../context/ExchangeContext";
 import Container from "../Container/Container";
 import Button from "../Button/Button";
@@ -8,6 +6,7 @@ import Input from "../Input/Input";
 import Select from "../Select/Select";
 import Infos from "../Infos/Infos";
 import { TbHelp } from "react-icons/tb";
+import useCurrencyConverter from "../../hooks/useCurrencyConvert";
 
 const Calculator: React.FC = () => {
 	const exchangeContext = useContext(ExchangeContext);
@@ -15,36 +14,26 @@ const Calculator: React.FC = () => {
 	if (!exchangeContext)
 		throw new Error("ExchangeContext must be used within an ExchangeProvider");
 
-	const { coins, convert, combinations } = exchangeContext;
-
-	const [amount, setAmount] = useState<string>("");
-	const [fromCurrency, setFromCurrency] = useState<string>("");
-	const [toCurrency, setToCurrency] = useState<string>("");
-	const [validConversion, setValidConversion] = useState<boolean>(false);
-	const [result, setResult] = useState<number | null>(null);
-	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-	const handleConvert = async () => {
-		const total = await convert(amount, fromCurrency, toCurrency);
-		if (total !== null) {
-			setResult(total);
-		}
-	};
+	const { coins, combinations } = exchangeContext;
+	const {
+		amount,
+		fromCurrency,
+		toCurrency,
+		validConversion,
+		result,
+		isModalOpen,
+		setFromCurrency,
+		setToCurrency,
+		handleAmountChange,
+		handleConvert,
+		openModal,
+		closeModal,
+	} = useCurrencyConverter();
 
 	const currencyOptions = Object.keys(coins).map((currency) => ({
 		value: currency,
 		label: `${currency} - ${coins[currency]}`,
 	}));
-
-	const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value;
-		setAmount(value);
-		const amountNumber = parseFloat(value);
-		setValidConversion(!isNaN(amountNumber) && amountNumber >= 0);
-	};
-
-	const openModal = () => setIsModalOpen(true);
-	const closeModal = () => setIsModalOpen(false);
 
 	return (
 		<Container className="flex flex-col gap-3 items-center md:mt-8">
@@ -53,10 +42,7 @@ const Calculator: React.FC = () => {
 				<p className="text-slate-500 m-0">
 					Antes de seguir, veja as combinações disponíveis
 				</p>
-				<Button
-					variant="default"
-					onClick={openModal}
-					className="py-2 px-2 w-fit">
+				<Button variant="default" onClick={openModal} className="py-2 px-2 w-fit">
 					<TbHelp />
 				</Button>
 			</div>
@@ -67,7 +53,6 @@ const Calculator: React.FC = () => {
 				placeholder="Montante"
 			/>
 			<Select
-				defaultValue="Selecione uma moeda"
 				label="De"
 				options={currencyOptions}
 				value={fromCurrency}
@@ -82,9 +67,7 @@ const Calculator: React.FC = () => {
 
 			<Button
 				onClick={handleConvert}
-				className={`uppercase ${
-					validConversion ? "" : "opacity-50 cursor-not-allowed"
-				}`}
+				className={`uppercase ${validConversion ? "" : "opacity-50 cursor-not-allowed"}`}
 				disabled={!validConversion}>
 				Converter
 			</Button>
