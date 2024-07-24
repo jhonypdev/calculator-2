@@ -18,6 +18,7 @@ const Infos: React.FC<InfosProps> = ({ lists, onClose }) => {
         <button
           className="absolute text-lg top-2 right-3 text-gray-500 px-2 py-2"
           onClick={onClose}
+          data-testid="close-modal-button"
         >
           <IoMdClose />
         </button>

@@ -16,6 +16,7 @@ const useCurrencyConverter = ({ convert, coins, combinations }: UseCurrencyConve
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    console.log("handleAmountChange chamado com:", value);
     setAmount(value);
     const amountNumber = parseFloat(value);
     setValidConversion(!isNaN(amountNumber) && amountNumber >= 0);

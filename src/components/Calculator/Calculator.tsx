@@ -6,7 +6,9 @@ import Input from "../Input/Input";
 import Select from "../Select/Select";
 import Infos from "../Infos/Infos";
 import { TbHelp } from "react-icons/tb";
-import useCurrencyConverter from "../../hooks/useCurrencyConvert";
+import useCurrencyConverter from "../../hooks/useCurrencyConverter";
+import { IoMdArrowDropright } from "react-icons/io";
+import Label from "../Label/Label";
 
 const Calculator: React.FC = () => {
   const exchangeContext = useContext(ExchangeContext);
@@ -42,23 +44,49 @@ const Calculator: React.FC = () => {
       <h2 className="text-xl text-slate-800 font-bold">Conversão Monetária</h2>
       <div className="flex gap-2 items-center mb-4">
         <p className="text-slate-500 m-0">Antes de seguir, veja as combinações disponíveis</p>
-        <Button variant="default" onClick={openModal} className="py-2 px-2 w-fit">
+        <Button
+          data-testid="open-modal-button"
+          variant="default"
+          onClick={openModal}
+          className="py-2 px-2 w-fit"
+        >
           <TbHelp />
         </Button>
       </div>
-      <Input type="text" value={amount} onChange={handleAmountChange} placeholder="Montante" />
-      <Select
-        label="De"
-        options={currencyOptions}
-        value={fromCurrency}
-        onChange={(e) => setFromCurrency(e.target.value)}
+      <Input
+        type="text"
+        data-testid="amount-input"
+        value={amount}
+        onChange={handleAmountChange}
+        placeholder="Montante"
       />
-      <Select
-        label="Para"
-        options={currencyOptions}
-        value={toCurrency}
-        onChange={(e) => setToCurrency(e.target.value)}
-      />
+
+      <div
+        className={`flex items-center relative group rounded-lg w-fit bg-gray-800 overflow-hidden `}
+      >
+        <IoMdArrowDropright className="w-8 h-8 absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-300 group-hover:rotate-90 group-hover:text-white duration-300" />
+        <Label htmlFor="from" label="De" />
+        <Select
+          defaultValue="Selecione uma moeda"
+          id="from"
+          options={currencyOptions}
+          value={fromCurrency}
+          onChange={(e) => setFromCurrency(e.target.value)}
+        />
+      </div>
+      <div
+        className={`flex items-center relative group rounded-lg w-fit bg-gray-800 overflow-hidden `}
+      >
+        <IoMdArrowDropright className="w-8 h-8 absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-300 group-hover:rotate-90 group-hover:text-white duration-300" />
+        <Label htmlFor="to" label="Para" />
+        <Select
+          defaultValue="Selecione uma moeda"
+          id="to"
+          options={currencyOptions}
+          value={toCurrency}
+          onChange={(e) => setToCurrency(e.target.value)}
+        />
+      </div>
       <Button
         onClick={handleConvert}
         className={`uppercase ${validConversion ? "" : "opacity-50 cursor-not-allowed"}`}
